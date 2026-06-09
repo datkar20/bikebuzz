@@ -1,0 +1,263 @@
+:root {
+  --bb-ink: #172126;
+  --bb-muted: #6f7b82;
+  --bb-line: #e7ecef;
+  --bb-bg: #f6f8f7;
+  --bb-brand: #18a058;
+  --bb-brand-dark: #0d7a40;
+  --bb-accent: #ffb703;
+  --bb-panel: #ffffff;
+}
+
+* {
+  letter-spacing: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bb-bg);
+  color: var(--bb-ink);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.navbar {
+  height: 72px;
+}
+
+.navbar-brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.navbar-brand span {
+  font-weight: 800;
+  color: var(--bb-brand-dark);
+}
+
+.app-sidebar {
+  width: 280px;
+  background: #fff;
+  border-right: 1px solid var(--bb-line);
+  padding-top: 72px;
+}
+
+.app-main {
+  padding: 96px 20px 36px;
+}
+
+@media (min-width: 992px) {
+  .app-main {
+    margin-left: 280px;
+    padding: 104px 32px 48px;
+  }
+}
+
+.sidebar-section {
+  color: var(--bb-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.app-sidebar .nav-link {
+  min-height: 44px;
+  border-radius: 8px;
+  color: #334047;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.2s ease;
+}
+
+.app-sidebar .nav-link:hover,
+.app-sidebar .nav-link.active {
+  background: #eaf8f0;
+  color: var(--bb-brand-dark);
+  transform: translateX(2px);
+}
+
+.sidebar-card,
+.bb-card {
+  border: 1px solid var(--bb-line);
+  background: var(--bb-panel);
+  border-radius: 8px;
+}
+
+.sidebar-card {
+  padding: 14px;
+}
+
+.bb-card {
+  box-shadow: 0 12px 32px rgba(23, 33, 38, 0.06);
+}
+
+.hero-bike {
+  min-height: 430px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #10231b 0%, #246a48 55%, #f0c75e 100%);
+  color: #fff;
+}
+
+.hero-bike::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.24), transparent 34%);
+}
+
+.hero-bike img {
+  max-height: 330px;
+  filter: drop-shadow(0 28px 32px rgba(0, 0, 0, 0.28));
+  animation: floatBike 4s ease-in-out infinite;
+}
+
+@keyframes floatBike {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.btn-brand {
+  background: var(--bb-brand);
+  color: #fff;
+  border-color: var(--bb-brand);
+  font-weight: 700;
+}
+
+.btn-brand:hover {
+  background: var(--bb-brand-dark);
+  border-color: var(--bb-brand-dark);
+  color: #fff;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--bb-line);
+  background: #fff;
+  border-radius: 8px;
+}
+
+.user-pill {
+  border: 1px solid var(--bb-line);
+  background: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.notify-dot,
+.cart-badge {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999px;
+}
+
+.notify-dot {
+  width: 9px;
+  height: 9px;
+}
+
+.cart-badge {
+  min-width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  line-height: 18px;
+  text-align: center;
+}
+
+.notify-menu {
+  width: min(340px, calc(100vw - 32px));
+}
+
+.notify-item {
+  white-space: normal;
+  border-radius: 8px;
+}
+
+.product-card {
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 38px rgba(23, 33, 38, 0.12);
+}
+
+.product-img {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: contain;
+  background: #f1f4f2;
+  padding: 18px;
+}
+
+.stat-tile {
+  min-height: 118px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--bb-line);
+}
+
+.table img.thumb {
+  width: 72px;
+  height: 54px;
+  object-fit: contain;
+  background: #f3f5f4;
+  border-radius: 8px;
+}
+
+.auth-wrap {
+  min-height: calc(100vh - 130px);
+  display: grid;
+  place-items: center;
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  border-radius: 8px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+}
+
+.page-title {
+  font-weight: 800;
+}
+
+.badge-soft {
+  background: #eaf8f0;
+  color: var(--bb-brand-dark);
+}
+
+@media (max-width: 575px) {
+  .navbar {
+    height: 64px;
+  }
+
+  .app-main {
+    padding-top: 84px;
+  }
+
+  .hero-bike {
+    min-height: auto;
+  }
+
+  .hero-bike img {
+    max-height: 220px;
+  }
+}
