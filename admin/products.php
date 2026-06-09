@@ -82,10 +82,10 @@ if ($action === 'create' || ($action === 'edit' && $id > 0)) {
 }
 
 $products = $pdo->query('SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id DESC')->fetchAll();
-render_header('CRUD san pham', 'admin-products');
+render_header('Quan ly san pham', 'admin-products');
 ?>
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-    <h1 class="page-title h3 mb-0">CRUD san pham</h1>
+    <h1 class="page-title h3 mb-0">Quan ly san pham</h1>
     <a class="btn btn-brand" href="<?= url('admin/products.php?action=create') ?>"><i class="bi bi-plus-lg me-1"></i>Them san pham</a>
 </div>
 <div class="bb-card p-3 table-responsive">

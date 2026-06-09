@@ -50,6 +50,13 @@ function redirect(string $path): never
     exit;
 }
 
+function current_relative_url(): string
+{
+    $script = basename($_SERVER['SCRIPT_NAME'] ?? 'index.php');
+    $query = $_SERVER['QUERY_STRING'] ?? '';
+    return $script . ($query !== '' ? '?' . $query : '');
+}
+
 function flash(string $type, string $message): void
 {
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
@@ -118,6 +125,39 @@ function cart_count(): int
     $stmt = db()->prepare('SELECT COALESCE(SUM(quantity), 0) FROM carts WHERE user_id = ?');
     $stmt->execute([$user['id']]);
     return (int) $stmt->fetchColumn();
+}
+
+function wishlist_count(): int
+{
+    $user = current_user();
+    if (!$user) {
+        return 0;
+    }
+    $stmt = db()->prepare('SELECT COUNT(*) FROM wishlists WHERE user_id = ?');
+    $stmt->execute([$user['id']]);
+    return (int) $stmt->fetchColumn();
+}
+
+function is_wishlisted(int $productId): bool
+{
+    $user = current_user();
+    if (!$user) {
+        return false;
+    }
+    $stmt = db()->prepare('SELECT 1 FROM wishlists WHERE user_id = ? AND product_id = ?');
+    $stmt->execute([$user['id'], $productId]);
+    return (bool) $stmt->fetchColumn();
+}
+
+function product_rating(int $productId): array
+{
+    $stmt = db()->prepare('SELECT ROUND(AVG(rating), 1) AS average_rating, COUNT(*) AS total_reviews FROM reviews WHERE product_id = ?');
+    $stmt->execute([$productId]);
+    $rating = $stmt->fetch() ?: ['average_rating' => null, 'total_reviews' => 0];
+    return [
+        'average' => $rating['average_rating'] ? (float) $rating['average_rating'] : 0,
+        'total' => (int) $rating['total_reviews'],
+    ];
 }
 
 function latest_notifications(?string $role = null, int $limit = 5): array

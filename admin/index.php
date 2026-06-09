@@ -7,7 +7,7 @@ $stats = [
     'San pham' => ['value' => (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn(), 'icon' => 'bi-box-seam'],
     'Danh muc' => ['value' => (int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn(), 'icon' => 'bi-tags'],
     'Nguoi dung' => ['value' => (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn(), 'icon' => 'bi-people'],
-    'Gio hang' => ['value' => (int) $pdo->query('SELECT COUNT(*) FROM carts')->fetchColumn(), 'icon' => 'bi-bag'],
+    'Danh gia' => ['value' => (int) $pdo->query('SELECT COUNT(*) FROM reviews')->fetchColumn(), 'icon' => 'bi-star'],
 ];
 $recentProducts = $pdo->query('SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id DESC LIMIT 6')->fetchAll();
 

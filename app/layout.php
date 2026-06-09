@@ -56,6 +56,12 @@ function render_header(string $title = APP_NAME, string $active = ''): void
                     <?php if (cart_count() > 0): ?><span class="cart-badge"><?= cart_count() ?></span><?php endif; ?>
                 </a>
                 <?php if ($user): ?>
+                    <a class="btn btn-icon position-relative d-none d-sm-inline-flex" href="<?= url('wishlist.php') ?>" aria-label="Yeu thich">
+                        <i class="bi bi-heart"></i>
+                        <?php if (wishlist_count() > 0): ?><span class="cart-badge"><?= wishlist_count() ?></span><?php endif; ?>
+                    </a>
+                <?php endif; ?>
+                <?php if ($user): ?>
                     <div class="dropdown">
                         <button class="btn user-pill dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i> <?= e($user['name']) ?>
@@ -100,6 +106,7 @@ function render_sidebar(string $active, ?array $user): void
     ];
     if ($user) {
         $items[] = ['cart', 'Gio hang', 'cart.php', 'bi-bag-check'];
+        $items[] = ['wishlist', 'Yeu thich', 'wishlist.php', 'bi-heart'];
         $items[] = ['account', 'Tai khoan', 'account.php', 'bi-person'];
     }
     ?>
@@ -115,16 +122,13 @@ function render_sidebar(string $active, ?array $user): void
         <div class="sidebar-section mt-4">Admin</div>
         <div class="nav flex-column gap-1">
             <a class="nav-link <?= $active === 'admin' ? 'active' : '' ?>" href="<?= url('admin/index.php') ?>"><i class="bi bi-speedometer2"></i><span>Tong quan</span></a>
-            <a class="nav-link <?= $active === 'admin-products' ? 'active' : '' ?>" href="<?= url('admin/products.php') ?>"><i class="bi bi-box-seam"></i><span>CRUD san pham</span></a>
+            <a class="nav-link <?= $active === 'admin-products' ? 'active' : '' ?>" href="<?= url('admin/products.php') ?>"><i class="bi bi-box-seam"></i><span>San pham</span></a>
             <a class="nav-link <?= $active === 'admin-categories' ? 'active' : '' ?>" href="<?= url('admin/categories.php') ?>"><i class="bi bi-tags"></i><span>Danh muc</span></a>
             <a class="nav-link <?= $active === 'admin-users' ? 'active' : '' ?>" href="<?= url('admin/users.php') ?>"><i class="bi bi-people"></i><span>Nguoi dung</span></a>
+            <a class="nav-link <?= $active === 'admin-reviews' ? 'active' : '' ?>" href="<?= url('admin/reviews.php') ?>"><i class="bi bi-star"></i><span>Danh gia</span></a>
             <a class="nav-link <?= $active === 'admin-notifications' ? 'active' : '' ?>" href="<?= url('admin/notifications.php') ?>"><i class="bi bi-megaphone"></i><span>Thong bao</span></a>
         </div>
     <?php endif; ?>
-    <div class="mt-auto sidebar-card">
-        <div class="fw-bold">Goi y tinh nang</div>
-        <div class="small text-muted">Thanh toan online, danh gia xe, wishlist, Cloudinary/Firebase Storage va dashboard don hang.</div>
-    </div>
     <?php
 }
 

@@ -34,15 +34,14 @@ render_header('Dang nhap', '');
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <input class="form-control" type="email" name="email" required value="admin@bikebuzz.test">
+                <input class="form-control" type="email" name="email" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Mat khau</label>
-                <input class="form-control" type="password" name="password" required value="admin123">
+                <input class="form-control" type="password" name="password" required>
             </div>
             <button class="btn btn-brand w-100">Dang nhap</button>
         </form>
-        <div class="small text-muted mt-3">Tai khoan mau: admin@bikebuzz.test/admin123 hoac user@bikebuzz.test/user123.</div>
         <div class="mt-3 text-center">Chua co tai khoan? <a href="<?= url('auth/register.php') ?>">Dang ky</a></div>
     </div>
 </div>

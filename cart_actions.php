@@ -34,4 +34,5 @@ if ($action === 'add') {
     flash('success', 'Da xoa san pham khoi gio.');
 }
 
-redirect('cart.php');
+$back = $_POST['back'] ?? 'cart.php';
+redirect($back);

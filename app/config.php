@@ -108,6 +108,28 @@ function initialize_database(PDO $pdo): void
             audience TEXT NOT NULL DEFAULT 'all',
             created_at TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS wishlists (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE(user_id, product_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),
+            comment TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE(user_id, product_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+        );
     ");
 
     $count = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();

@@ -9,15 +9,15 @@ render_header('Trang chu', 'home');
 ?>
 <section class="hero-bike d-flex align-items-center mb-4">
     <div class="container-fluid position-relative z-1">
-        <div class="row align-items-center g-4 p-3 p-lg-5">
+        <div class="row align-items-center g-4 hero-content">
             <div class="col-lg-6">
-                <span class="badge bg-light text-dark mb-3">Bike shop responsive</span>
-                <h1 class="display-5 fw-bold mb-3">Xe dap dep, de chon, luu gio hang theo tai khoan.</h1>
-                <p class="lead mb-4 text-white-50">BikeBuzz co CRUD admin, login/register, thong bao SweetAlert2 va giao dien Bootstrap gon dep cho ca admin lan nguoi dung.</p>
+                <span class="badge bg-light text-dark mb-3">Bo suu tap 2026</span>
+                <h1 class="display-5 fw-bold mb-3">Chon xe dap phu hop cho moi hanh trinh.</h1>
+                <p class="lead mb-4 text-white-50">BikeBuzz cung cap xe dia hinh, xe dua va xe thanh pho chon loc, thong tin ro rang, gia niem yet minh bach va gio hang luu theo tai khoan.</p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a class="btn btn-light fw-bold" href="<?= url('products.php') ?>"><i class="bi bi-bicycle me-1"></i>Xem san pham</a>
+                    <a class="btn btn-light fw-bold" href="<?= url('products.php') ?>"><i class="bi bi-bicycle me-1"></i>Kham pha xe</a>
                     <?php if (!current_user()): ?>
-                        <a class="btn btn-outline-light fw-bold" href="<?= url('auth/login.php') ?>">Dang nhap de them gio</a>
+                        <a class="btn btn-outline-light fw-bold" href="<?= url('auth/register.php') ?>">Tao tai khoan</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -40,14 +40,14 @@ render_header('Trang chu', 'home');
         <div class="stat-tile">
             <div class="text-muted small">San pham</div>
             <div class="h2 fw-bold"><?= (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn() ?></div>
-            <div class="small text-muted">Admin co the them, sua, xoa day du.</div>
+            <div class="small text-muted">Hang co san, cap nhat lien tuc.</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stat-tile">
             <div class="text-muted small">Gio hang</div>
             <div class="h2 fw-bold"><?= cart_count() ?></div>
-            <div class="small text-muted">Duoc luu rieng theo tung tai khoan.</div>
+            <div class="small text-muted">San sang dat hang khi can.</div>
         </div>
     </div>
 </div>
