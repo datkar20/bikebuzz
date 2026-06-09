@@ -20,7 +20,7 @@ Can PHP co extension `pdo_sqlite`.
 php -S localhost:8000
 ```
 
-Mo `http://localhost:8000/index.php`.
+File chay chinh la `index.php`. Mo `http://localhost:8000/index.php`.
 
 Database SQLite se tu tao tai `data/bikebuzz.sqlite` trong lan chay dau tien.
 
