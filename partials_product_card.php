@@ -17,7 +17,7 @@ $rating = product_rating((int) $product['id']);
             </div>
             <div class="small mb-2">
                 <span class="rating-stars"><i class="bi bi-star-fill"></i></span>
-                <span class="text-muted"><?= $rating['total'] ? e((string) $rating['average']) . '/5 · ' . (int) $rating['total'] . ' danh gia' : 'Chua co danh gia' ?></span>
+                <span class="text-muted"><?= $rating['total'] ? e((string) $rating['average']) . '/5 · ' . (int) $rating['total'] . ' đánh giá' : 'Chưa có đánh giá' ?></span>
             </div>
             <p class="small text-muted mb-3"><?= e(excerpt($product['description'])) ?></p>
             <div class="d-flex align-items-center justify-content-between gap-2">
@@ -29,17 +29,17 @@ $rating = product_rating((int) $product['id']);
                             <input type="hidden" name="action" value="toggle">
                             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="back" value="<?= e(current_relative_url()) ?>">
-                            <button class="btn btn-outline-dark btn-sm" title="Yeu thich"><i class="bi <?= is_wishlisted((int) $product['id']) ? 'bi-heart-fill text-danger' : 'bi-heart' ?>"></i></button>
+                            <button class="btn btn-outline-dark btn-sm" title="Yêu thích"><i class="bi <?= is_wishlisted((int) $product['id']) ? 'bi-heart-fill text-danger' : 'bi-heart' ?>"></i></button>
                         </form>
                         <form method="post" action="<?= url('cart_actions.php') ?>">
                             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="back" value="<?= e(current_relative_url()) ?>">
-                            <button class="btn btn-brand btn-sm" title="Them vao gio"><i class="bi bi-bag-plus"></i></button>
+                            <button class="btn btn-brand btn-sm btn-cart-add" title="Thêm vào giỏ"><i class="bi bi-cart-plus-fill"></i></button>
                         </form>
                     <?php else: ?>
-                        <a class="btn btn-outline-dark btn-sm" href="<?= url('auth/login.php') ?>" title="Dang nhap de them gio"><i class="bi bi-lock"></i></a>
+                        <a class="btn btn-outline-dark btn-sm" href="<?= url('auth/login.php') ?>" title="Đăng nhập để thêm giỏ"><i class="bi bi-lock"></i></a>
                     <?php endif; ?>
                 </div>
             </div>

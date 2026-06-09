@@ -9,20 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         $stmt = $pdo->prepare('DELETE FROM categories WHERE id = ?');
         $stmt->execute([(int) $_POST['id']]);
-        flash('success', 'Da xoa danh muc.');
+        flash('success', 'Đã xóa danh mục.');
     } else {
         $name = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
         if ($name === '') {
-            flash('warning', 'Ten danh muc khong duoc de trong.');
+            flash('warning', 'Tên danh mục không được để trống.');
         } elseif ($action === 'create') {
             $stmt = $pdo->prepare('INSERT INTO categories(name, description) VALUES (?, ?)');
             $stmt->execute([$name, $description]);
-            flash('success', 'Da them danh muc.');
+            flash('success', 'Đã thêm danh mục.');
         } elseif ($action === 'update') {
             $stmt = $pdo->prepare('UPDATE categories SET name = ?, description = ? WHERE id = ?');
             $stmt->execute([$name, $description, (int) $_POST['id']]);
-            flash('success', 'Da cap nhat danh muc.');
+            flash('success', 'Đã cập nhật danh mục.');
         }
     }
     redirect('admin/categories.php');
@@ -36,26 +36,26 @@ if (isset($_GET['edit'])) {
 }
 $categories = $pdo->query('SELECT c.*, COUNT(p.id) AS product_count FROM categories c LEFT JOIN products p ON p.category_id = c.id GROUP BY c.id ORDER BY c.name')->fetchAll();
 
-render_header('Danh muc', 'admin-categories');
+render_header('Danh mục', 'admin-categories');
 ?>
-<h1 class="page-title h3 mb-3">Quan ly danh muc</h1>
+<h1 class="page-title h3 mb-3">Quản lý danh mục</h1>
 <div class="row g-3">
     <div class="col-lg-4">
         <form class="bb-card p-3" method="post">
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             <input type="hidden" name="action" value="<?= $edit ? 'update' : 'create' ?>">
             <input type="hidden" name="id" value="<?= (int) ($edit['id'] ?? 0) ?>">
-            <h2 class="h5 fw-bold"><?= $edit ? 'Sua danh muc' : 'Them danh muc' ?></h2>
-            <div class="mb-3"><label class="form-label">Ten</label><input class="form-control" name="name" required value="<?= e($edit['name'] ?? '') ?>"></div>
-            <div class="mb-3"><label class="form-label">Mo ta</label><textarea class="form-control" name="description" rows="3"><?= e($edit['description'] ?? '') ?></textarea></div>
-            <button class="btn btn-brand"><?= $edit ? 'Cap nhat' : 'Them moi' ?></button>
-            <?php if ($edit): ?><a class="btn btn-outline-dark" href="<?= url('admin/categories.php') ?>">Huy</a><?php endif; ?>
+            <h2 class="h5 fw-bold"><?= $edit ? 'Sửa danh mục' : 'Thêm danh mục' ?></h2>
+            <div class="mb-3"><label class="form-label">Tên</label><input class="form-control" name="name" required value="<?= e($edit['name'] ?? '') ?>"></div>
+            <div class="mb-3"><label class="form-label">Mô tả</label><textarea class="form-control" name="description" rows="3"><?= e($edit['description'] ?? '') ?></textarea></div>
+            <button class="btn btn-brand"><?= $edit ? 'Cập nhật' : 'Thêm mới' ?></button>
+            <?php if ($edit): ?><a class="btn btn-outline-dark" href="<?= url('admin/categories.php') ?>">Hủy</a><?php endif; ?>
         </form>
     </div>
     <div class="col-lg-8">
         <div class="bb-card p-3 table-responsive">
             <table class="table align-middle mb-0">
-                <thead><tr><th>Ten</th><th>Mo ta</th><th>San pham</th><th></th></tr></thead>
+                <thead><tr><th>Tên</th><th>Mô tả</th><th>Sản phẩm</th><th></th></tr></thead>
                 <tbody>
                     <?php foreach ($categories as $category): ?>
                         <tr>
@@ -64,7 +64,7 @@ render_header('Danh muc', 'admin-categories');
                             <td><?= (int) $category['product_count'] ?></td>
                             <td class="text-end">
                                 <a class="btn btn-outline-dark btn-sm" href="<?= url('admin/categories.php?edit=' . (int) $category['id']) ?>"><i class="bi bi-pencil"></i></a>
-                                <form class="d-inline" method="post" data-confirm="Xoa danh muc nay? San pham se chuyen ve Khac.">
+                                <form class="d-inline" method="post" data-confirm="Xóa danh mục này? Sản phẩm sẽ chuyển về Khác.">
                                     <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="<?= (int) $category['id'] ?>">

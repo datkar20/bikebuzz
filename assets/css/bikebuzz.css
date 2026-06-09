@@ -242,6 +242,136 @@ body {
   gap: 8px;
 }
 
+.product-card .btn-sm {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cart-add {
+  background: #0f8a4a;
+}
+
+.filter-panel {
+  border: 1px solid var(--bb-line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 14px 34px rgba(23, 33, 38, 0.07);
+}
+
+.filter-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--bb-muted);
+}
+
+.input-icon .form-control {
+  padding-left: 38px;
+}
+
+.cart-drawer {
+  width: min(460px, 100vw);
+}
+
+.cart-drawer-list {
+  display: grid;
+  gap: 14px;
+}
+
+.cart-drawer-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--bb-line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.cart-drawer-item img {
+  width: 84px;
+  height: 72px;
+  object-fit: contain;
+  background: #f3f5f4;
+  border-radius: 8px;
+}
+
+.cart-qty {
+  max-width: 78px;
+}
+
+.store-panel {
+  border: 1px solid var(--bb-line);
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.brand-card {
+  color: var(--bb-ink);
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.brand-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 38px rgba(23, 33, 38, 0.1);
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #eaf8f0;
+  color: var(--bb-brand-dark);
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.app-footer {
+  margin-left: 0;
+  background: #10231b;
+  color: rgba(255, 255, 255, 0.76);
+  padding: 34px 20px;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 1fr;
+  gap: 24px;
+}
+
+.footer-brand,
+.footer-title {
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.app-footer a {
+  display: block;
+  color: rgba(255, 255, 255, 0.76);
+  margin-bottom: 6px;
+}
+
 .stat-tile {
   min-height: 118px;
   padding: 20px;
@@ -283,6 +413,13 @@ body {
   color: var(--bb-brand-dark);
 }
 
+@media (min-width: 992px) {
+  .app-footer {
+    margin-left: 280px;
+    padding-inline: 32px;
+  }
+}
+
 @media (max-width: 575px) {
   .navbar {
     height: 64px;
@@ -302,5 +439,13 @@ body {
 
   .hero-bike img {
     max-height: 220px;
+  }
+
+  .filter-heading {
+    align-items: flex-start;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
   }
 }

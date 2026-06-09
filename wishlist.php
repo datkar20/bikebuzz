@@ -7,19 +7,19 @@ $stmt = db()->prepare('SELECT p.*, c.name AS category_name, w.created_at AS save
 $stmt->execute([$user['id']]);
 $products = $stmt->fetchAll();
 
-render_header('Yeu thich', 'wishlist');
+render_header('Yêu thích', 'wishlist');
 ?>
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
     <div>
-        <h1 class="page-title h3 mb-1">Danh sach yeu thich</h1>
-        <div class="text-muted">Luu lai nhung mau xe ban dang can nhac.</div>
+        <h1 class="page-title h3 mb-1">Danh sách yêu thích</h1>
+        <div class="text-muted">Lưu lại những mẫu xe bạn đang cân nhắc.</div>
     </div>
-    <a class="btn btn-outline-dark" href="<?= url('products.php') ?>"><i class="bi bi-bicycle me-1"></i>Xem san pham</a>
+    <a class="btn btn-outline-dark" href="<?= url('products.php') ?>"><i class="bi bi-bicycle me-1"></i>Xem sản phẩm</a>
 </div>
 
 <div class="row g-3">
     <?php if (!$products): ?>
-        <div class="col-12"><div class="bb-card p-5 text-center text-muted">Ban chua luu san pham nao.</div></div>
+        <div class="col-12"><div class="bb-card p-5 text-center text-muted">Bạn chưa lưu sản phẩm nào.</div></div>
     <?php endif; ?>
     <?php foreach ($products as $product): ?>
         <?php include __DIR__ . '/partials_product_card.php'; ?>

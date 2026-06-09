@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($postAction === 'delete') {
         $stmt = $pdo->prepare('DELETE FROM products WHERE id = ?');
         $stmt->execute([(int) $_POST['id']]);
-        flash('success', 'Da xoa san pham.');
+        flash('success', 'Đã xóa sản phẩm.');
         redirect('admin/products.php');
     }
 
@@ -28,18 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image = upload_image_or_url($_FILES['image_file'] ?? null, $_POST['image_url'] ?? '', $currentImage);
 
     if ($name === '' || $brand === '' || $description === '' || $image === '') {
-        flash('warning', 'Vui long nhap day du thong tin san pham va anh.');
+        flash('warning', 'Vui lòng nhập đầy đủ thông tin sản phẩm và ảnh.');
         redirect('admin/products.php?action=' . ($postAction === 'create' ? 'create' : 'edit&id=' . (int) $_POST['id']));
     }
 
     if ($postAction === 'create') {
         $stmt = $pdo->prepare('INSERT INTO products(category_id, name, brand, price, stock, image, description, featured, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([$categoryId, $name, $brand, $price, $stock, $image, $description, $featured, date('Y-m-d H:i:s')]);
-        flash('success', 'Da them san pham.');
+        flash('success', 'Đã thêm sản phẩm.');
     } elseif ($postAction === 'update') {
         $stmt = $pdo->prepare('UPDATE products SET category_id = ?, name = ?, brand = ?, price = ?, stock = ?, image = ?, description = ?, featured = ? WHERE id = ?');
         $stmt->execute([$categoryId, $name, $brand, $price, $stock, $image, $description, $featured, (int) $_POST['id']]);
-        flash('success', 'Da cap nhat san pham.');
+        flash('success', 'Đã cập nhật sản phẩm.');
     }
     redirect('admin/products.php');
 }
@@ -51,30 +51,30 @@ if ($action === 'create' || ($action === 'edit' && $id > 0)) {
         $stmt->execute([$id]);
         $product = $stmt->fetch();
         if (!$product) {
-            flash('error', 'Khong tim thay san pham.');
+            flash('error', 'Không tìm thấy sản phẩm.');
             redirect('admin/products.php');
         }
     }
-    render_header($action === 'create' ? 'Them san pham' : 'Sua san pham', 'admin-products');
+    render_header($action === 'create' ? 'Thêm sản phẩm' : 'Sửa sản phẩm', 'admin-products');
     ?>
-    <h1 class="page-title h3 mb-3"><?= $action === 'create' ? 'Them san pham' : 'Sua san pham' ?></h1>
+    <h1 class="page-title h3 mb-3"><?= $action === 'create' ? 'Thêm sản phẩm' : 'Sửa sản phẩm' ?></h1>
     <form class="bb-card p-4" method="post" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
         <input type="hidden" name="action" value="<?= $action === 'create' ? 'create' : 'update' ?>">
         <input type="hidden" name="id" value="<?= (int) $product['id'] ?>">
         <input type="hidden" name="current_image" value="<?= e($product['image']) ?>">
         <div class="row g-3">
-            <div class="col-md-6"><label class="form-label">Ten xe</label><input class="form-control" name="name" required value="<?= e($product['name']) ?>"></div>
-            <div class="col-md-6"><label class="form-label">Thuong hieu</label><input class="form-control" name="brand" required value="<?= e($product['brand']) ?>"></div>
-            <div class="col-md-4"><label class="form-label">Danh muc</label><select class="form-select" name="category_id"><option value="">Khac</option><?php foreach ($categories as $category): ?><option value="<?= (int) $category['id'] ?>" <?= (int) $product['category_id'] === (int) $category['id'] ? 'selected' : '' ?>><?= e($category['name']) ?></option><?php endforeach; ?></select></div>
-            <div class="col-md-4"><label class="form-label">Gia</label><input class="form-control" type="number" name="price" min="0" required value="<?= (int) $product['price'] ?>"></div>
+            <div class="col-md-6"><label class="form-label">Tên xe</label><input class="form-control" name="name" required value="<?= e($product['name']) ?>"></div>
+            <div class="col-md-6"><label class="form-label">Thương hiệu</label><input class="form-control" name="brand" required value="<?= e($product['brand']) ?>"></div>
+            <div class="col-md-4"><label class="form-label">Danh mục</label><select class="form-select" name="category_id"><option value="">Khác</option><?php foreach ($categories as $category): ?><option value="<?= (int) $category['id'] ?>" <?= (int) $product['category_id'] === (int) $category['id'] ? 'selected' : '' ?>><?= e($category['name']) ?></option><?php endforeach; ?></select></div>
+            <div class="col-md-4"><label class="form-label">Giá</label><input class="form-control" type="number" name="price" min="0" required value="<?= (int) $product['price'] ?>"></div>
             <div class="col-md-4"><label class="form-label">Ton kho</label><input class="form-control" type="number" name="stock" min="0" required value="<?= (int) $product['stock'] ?>"></div>
             <div class="col-md-6"><label class="form-label">Anh URL Cloudinary/Firebase Storage</label><input class="form-control" name="image_url" placeholder="https://..." value="<?= starts_with($product['image'], 'http') ? e($product['image']) : '' ?>"></div>
             <div class="col-md-6"><label class="form-label">Hoac upload anh local</label><input class="form-control" type="file" name="image_file" accept="image/*"></div>
             <?php if ($product['image']): ?><div class="col-12"><img class="thumb" src="<?= e(product_image($product['image'])) ?>" alt=""></div><?php endif; ?>
-            <div class="col-12"><label class="form-label">Mo ta</label><textarea class="form-control" name="description" rows="4" required><?= e($product['description']) ?></textarea></div>
-            <div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" name="featured" <?= (int) $product['featured'] === 1 ? 'checked' : '' ?>> <span class="form-check-label">San pham noi bat</span></label></div>
-            <div class="col-12 d-flex gap-2"><button class="btn btn-brand">Luu</button><a class="btn btn-outline-dark" href="<?= url('admin/products.php') ?>">Huy</a></div>
+            <div class="col-12"><label class="form-label">Mô tả</label><textarea class="form-control" name="description" rows="4" required><?= e($product['description']) ?></textarea></div>
+            <div class="col-12"><label class="form-check"><input class="form-check-input" type="checkbox" name="featured" <?= (int) $product['featured'] === 1 ? 'checked' : '' ?>> <span class="form-check-label">Sản phẩm nổi bật</span></label></div>
+            <div class="col-12 d-flex gap-2"><button class="btn btn-brand">Lưu</button><a class="btn btn-outline-dark" href="<?= url('admin/products.php') ?>">Hủy</a></div>
         </div>
     </form>
     <?php render_footer(); exit; ?>
@@ -82,15 +82,15 @@ if ($action === 'create' || ($action === 'edit' && $id > 0)) {
 }
 
 $products = $pdo->query('SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY p.id DESC')->fetchAll();
-render_header('Quan ly san pham', 'admin-products');
+render_header('Quản lý sản phẩm', 'admin-products');
 ?>
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-    <h1 class="page-title h3 mb-0">Quan ly san pham</h1>
-    <a class="btn btn-brand" href="<?= url('admin/products.php?action=create') ?>"><i class="bi bi-plus-lg me-1"></i>Them san pham</a>
+    <h1 class="page-title h3 mb-0">Quản lý sản phẩm</h1>
+    <a class="btn btn-brand" href="<?= url('admin/products.php?action=create') ?>"><i class="bi bi-plus-lg me-1"></i>Thêm sản phẩm</a>
 </div>
 <div class="bb-card p-3 table-responsive">
     <table class="table align-middle mb-0">
-        <thead><tr><th>San pham</th><th>Danh muc</th><th>Gia</th><th>Kho</th><th>Noi bat</th><th></th></tr></thead>
+        <thead><tr><th>Sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Kho</th><th>Nổi bật</th><th></th></tr></thead>
         <tbody>
             <?php foreach ($products as $product): ?>
                 <tr>
@@ -101,7 +101,7 @@ render_header('Quan ly san pham', 'admin-products');
                     <td><?= (int) $product['featured'] ? '<span class="badge badge-soft">Hot</span>' : '<span class="text-muted">-</span>' ?></td>
                     <td class="text-end">
                         <a class="btn btn-outline-dark btn-sm" href="<?= url('admin/products.php?action=edit&id=' . (int) $product['id']) ?>"><i class="bi bi-pencil"></i></a>
-                        <form class="d-inline" method="post" data-confirm="Xoa san pham nay?">
+                        <form class="d-inline" method="post" data-confirm="Xóa sản phẩm này?">
                             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="id" value="<?= (int) $product['id'] ?>">

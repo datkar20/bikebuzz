@@ -130,23 +130,33 @@ function initialize_database(PDO $pdo): void
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS notification_reads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            notification_id INTEGER NOT NULL,
+            read_at TEXT NOT NULL,
+            UNIQUE(user_id, notification_id),
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (notification_id) REFERENCES notifications(id) ON DELETE CASCADE
+        );
     ");
 
     $count = (int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
     if ($count === 0) {
         $now = date('Y-m-d H:i:s');
         $stmt = $pdo->prepare('INSERT INTO users(name, email, password, role, created_at) VALUES (?, ?, ?, ?, ?)');
-        $stmt->execute(['Admin BikeBuzz', 'admin@bikebuzz.test', password_hash('admin123', PASSWORD_DEFAULT), 'admin', $now]);
-        $stmt->execute(['Khach hang mau', 'user@bikebuzz.test', password_hash('user123', PASSWORD_DEFAULT), 'user', $now]);
+        $stmt->execute(['Quản trị BikeBuzz', 'admin@bikebuzz.test', password_hash('admin123', PASSWORD_DEFAULT), 'admin', $now]);
+        $stmt->execute(['Khách hàng BikeBuzz', 'user@bikebuzz.test', password_hash('user123', PASSWORD_DEFAULT), 'user', $now]);
     }
 
     $categoryCount = (int) $pdo->query('SELECT COUNT(*) FROM categories')->fetchColumn();
     if ($categoryCount === 0) {
         $categories = [
-            ['Xe dap dia hinh', 'Leo doc, di trail va di phuot cuoi tuan.'],
-            ['Xe dap dua', 'Toc do cao, khung nhe, toi uu cho duong nhua.'],
-            ['Xe dap thanh pho', 'Thiet ke gon, tien loi cho di hoc va di lam.'],
-            ['Xe dap tre em', 'An toan, de dieu khien, mau sac vui mat.'],
+            ['Xe đạp địa hình', 'Leo dốc, đi trail và đi phượt cuối tuần.'],
+            ['Xe đạp đua', 'Tốc độ cao, khung nhẹ, tối ưu cho đường nhựa.'],
+            ['Xe đạp thành phố', 'Thiết kế gọn, tiện lợi cho đi học và đi làm.'],
+            ['Xe đạp trẻ em', 'An toàn, dễ điều khiển, màu sắc vui mắt.'],
         ];
         $stmt = $pdo->prepare('INSERT INTO categories(name, description) VALUES (?, ?)');
         foreach ($categories as $category) {
@@ -158,14 +168,14 @@ function initialize_database(PDO $pdo): void
     if ($productCount === 0) {
         $now = date('Y-m-d H:i:s');
         $products = [
-            [1, 'Trek Marlin 7 Gen 3', 'Trek', 18900000, 12, 'assets/img/list/bike1.jpg', 'Xe dia hinh can bang giua hieu nang, do ben va cam giac lai em.', 1],
-            [1, 'Giant Talon 1', 'Giant', 16500000, 9, 'assets/img/list/bike2.jpg', 'Phu hop nguoi moi nang cap len phanh dia va truyen dong on dinh.', 1],
-            [2, 'Specialized Allez Sport', 'Specialized', 24500000, 6, 'assets/img/list/bike3.jpg', 'Khung nhom nhe, geometry nhanh, hop cho tap luyen toc do.', 1],
-            [2, 'Cervelo P5X Lamborghini', 'Cervelo', 480000000, 2, 'assets/img/bikehot1.png', 'Phien ban trien lam cao cap danh cho nguoi suu tam va thi dau.', 1],
-            [3, 'Momentum iNeed Latte', 'Momentum', 9500000, 18, 'assets/img/list/bike4.jpg', 'Xe thanh pho thanh lich, yen em, de gan gio va phu kien.', 0],
-            [3, 'Cannondale Quick 4', 'Cannondale', 14200000, 10, 'assets/img/list/bike5.jpg', 'Xe hybrid linh hoat cho di lam, tap the duc va dao pho.', 0],
-            [4, 'RoyalBaby Freestyle 20', 'RoyalBaby', 5200000, 14, 'assets/img/list/bike6.jpg', 'Khung chac chan, phanh de bop, phu hop tre em nang dong.', 0],
-            [1, 'Scott Aspect 940', 'Scott', 17200000, 8, 'assets/img/list/bikes21.jpg', 'Lua chon MTB gon gang voi phuoc truoc va lop bam duong tot.', 0],
+            [1, 'Trek Marlin 7 Gen 3', 'Trek', 18900000, 12, 'assets/img/list/bike1.jpg', 'Xe địa hình cân bằng giữa hiệu năng, độ bền và cảm giác lái êm.', 1],
+            [1, 'Giant Talon 1', 'Giant', 16500000, 9, 'assets/img/list/bike2.jpg', 'Phù hợp người mới nâng cấp lên phanh đĩa và truyền động ổn định.', 1],
+            [2, 'Specialized Allez Sport', 'Specialized', 24500000, 6, 'assets/img/list/bike3.jpg', 'Khung nhôm nhẹ, geometry nhanh, hợp cho tập luyện tốc độ.', 1],
+            [2, 'Cervelo P5X Lamborghini', 'Cervelo', 480000000, 2, 'assets/img/bikehot1.png', 'Phiên bản trưng bày cao cấp dành cho người sưu tầm và thi đấu.', 1],
+            [3, 'Momentum iNeed Latte', 'Momentum', 9500000, 18, 'assets/img/list/bike4.jpg', 'Xe thành phố thanh lịch, yên êm, dễ gắn giỏ và phụ kiện.', 0],
+            [3, 'Cannondale Quick 4', 'Cannondale', 14200000, 10, 'assets/img/list/bike5.jpg', 'Xe hybrid linh hoạt cho đi làm, tập thể dục và dạo phố.', 0],
+            [4, 'RoyalBaby Freestyle 20', 'RoyalBaby', 5200000, 14, 'assets/img/list/bike6.jpg', 'Khung chắc chắn, phanh dễ bóp, phù hợp trẻ em năng động.', 0],
+            [1, 'Scott Aspect 940', 'Scott', 17200000, 8, 'assets/img/list/bikes21.jpg', 'Lựa chọn MTB gọn gàng với phuộc trước và lốp bám đường tốt.', 0],
         ];
         $stmt = $pdo->prepare('INSERT INTO products(category_id, name, brand, price, stock, image, description, featured, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         foreach ($products as $product) {
@@ -176,6 +186,37 @@ function initialize_database(PDO $pdo): void
     $notificationCount = (int) $pdo->query('SELECT COUNT(*) FROM notifications')->fetchColumn();
     if ($notificationCount === 0) {
         $stmt = $pdo->prepare('INSERT INTO notifications(title, message, audience, created_at) VALUES (?, ?, ?, ?)');
-        $stmt->execute(['Chao mung den BikeBuzz', 'Dang nhap de them xe vao gio hang va luu gio theo tai khoan.', 'all', date('Y-m-d H:i:s')]);
+        $stmt->execute(['Chào mừng đến BikeBuzz', 'Đăng nhập để lưu giỏ hàng, yêu thích sản phẩm và gửi đánh giá.', 'all', date('Y-m-d H:i:s')]);
+    }
+
+    normalize_seed_text($pdo);
+}
+
+function normalize_seed_text(PDO $pdo): void
+{
+    $categoryUpdates = [
+        ['Xe đạp địa hình', 'Leo dốc, đi trail và đi phượt cuối tuần.', 'Xe dap dia hinh'],
+        ['Xe đạp đua', 'Tốc độ cao, khung nhẹ, tối ưu cho đường nhựa.', 'Xe dap dua'],
+        ['Xe đạp thành phố', 'Thiết kế gọn, tiện lợi cho đi học và đi làm.', 'Xe dap thanh pho'],
+        ['Xe đạp trẻ em', 'An toàn, dễ điều khiển, màu sắc vui mắt.', 'Xe dap tre em'],
+    ];
+    $stmt = $pdo->prepare('UPDATE categories SET name = ?, description = ? WHERE name = ?');
+    foreach ($categoryUpdates as $update) {
+        $stmt->execute($update);
+    }
+
+    $productUpdates = [
+        ['Xe địa hình cân bằng giữa hiệu năng, độ bền và cảm giác lái êm.', 'Trek Marlin 7 Gen 3'],
+        ['Phù hợp người mới nâng cấp lên phanh đĩa và truyền động ổn định.', 'Giant Talon 1'],
+        ['Khung nhôm nhẹ, geometry nhanh, hợp cho tập luyện tốc độ.', 'Specialized Allez Sport'],
+        ['Phiên bản trưng bày cao cấp dành cho người sưu tầm và thi đấu.', 'Cervelo P5X Lamborghini'],
+        ['Xe thành phố thanh lịch, yên êm, dễ gắn giỏ và phụ kiện.', 'Momentum iNeed Latte'],
+        ['Xe hybrid linh hoạt cho đi làm, tập thể dục và dạo phố.', 'Cannondale Quick 4'],
+        ['Khung chắc chắn, phanh dễ bóp, phù hợp trẻ em năng động.', 'RoyalBaby Freestyle 20'],
+        ['Lựa chọn MTB gọn gàng với phuộc trước và lốp bám đường tốt.', 'Scott Aspect 940'],
+    ];
+    $stmt = $pdo->prepare('UPDATE products SET description = ? WHERE name = ?');
+    foreach ($productUpdates as $update) {
+        $stmt->execute($update);
     }
 }

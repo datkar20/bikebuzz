@@ -11,16 +11,16 @@ $comment = trim($_POST['comment'] ?? '');
 $stmt = db()->prepare('SELECT id FROM products WHERE id = ?');
 $stmt->execute([$productId]);
 if (!$stmt->fetchColumn()) {
-    flash('error', 'San pham khong ton tai.');
+    flash('error', 'Sản phẩm không tồn tại.');
     redirect('products.php');
 }
 
 if ($comment === '') {
-    flash('warning', 'Vui long nhap noi dung danh gia.');
+    flash('warning', 'Vui lòng nhập nội dung đánh giá.');
     redirect('product.php?id=' . $productId);
 }
 
 $stmt = db()->prepare('INSERT INTO reviews(user_id, product_id, rating, comment, created_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(user_id, product_id) DO UPDATE SET rating = excluded.rating, comment = excluded.comment, created_at = excluded.created_at');
 $stmt->execute([$user['id'], $productId, $rating, $comment, date('Y-m-d H:i:s')]);
-flash('success', 'Da luu danh gia cua ban.');
+flash('success', 'Đã lưu đánh giá của bạn.');
 redirect('product.php?id=' . $productId);

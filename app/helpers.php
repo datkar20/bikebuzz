@@ -30,7 +30,7 @@ function is_admin(): bool
 function require_login(): void
 {
     if (!current_user()) {
-        flash('warning', 'Ban can dang nhap de su dung tinh nang nay.');
+        flash('warning', 'Bạn cần đăng nhập để sử dụng tính năng này.');
         redirect('auth/login.php');
     }
 }
@@ -40,7 +40,7 @@ function require_admin(): void
     require_login();
     if (!is_admin()) {
         http_response_code(403);
-        exit('Ban khong co quyen truy cap khu vuc quan tri.');
+        exit('Bạn không có quyền truy cập khu vực quản trị.');
     }
 }
 
@@ -104,7 +104,7 @@ function verify_csrf(): void
     $token = $_POST['csrf_token'] ?? '';
     if (!$token || !hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
         http_response_code(419);
-        exit('CSRF token khong hop le.');
+        exit('CSRF token không hợp lệ.');
     }
 }
 
@@ -172,6 +172,35 @@ function latest_notifications(?string $role = null, int $limit = 5): array
     return $stmt->fetchAll();
 }
 
+function unread_notifications(?array $user = null): array
+{
+    if (!$user) {
+        return latest_notifications(null);
+    }
+
+    $stmt = db()->prepare("
+        SELECT n.*
+        FROM notifications n
+        LEFT JOIN notification_reads r ON r.notification_id = n.id AND r.user_id = ?
+        WHERE n.audience IN ('all', ?) AND r.id IS NULL
+        ORDER BY n.id DESC
+    ");
+    $stmt->execute([$user['id'], $user['role']]);
+    return $stmt->fetchAll();
+}
+
+function cart_items(): array
+{
+    $user = current_user();
+    if (!$user) {
+        return [];
+    }
+
+    $stmt = db()->prepare('SELECT c.*, p.name, p.brand, p.price, p.stock, p.image FROM carts c JOIN products p ON p.id = c.product_id WHERE c.user_id = ? ORDER BY c.id DESC');
+    $stmt->execute([$user['id']]);
+    return $stmt->fetchAll();
+}
+
 function upload_image_or_url(?array $file, string $imageUrl, string $fallback = ''): string
 {
     $imageUrl = trim($imageUrl);
@@ -183,7 +212,7 @@ function upload_image_or_url(?array $file, string $imageUrl, string $fallback = 
         $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
         $type = mime_content_type($file['tmp_name']);
         if (!isset($allowed[$type])) {
-            flash('error', 'Chi chap nhan anh JPG, PNG, WEBP hoac GIF.');
+            flash('error', 'Chỉ chấp nhận ảnh JPG, PNG, WEBP hoặc GIF.');
             return $fallback;
         }
         $name = 'bike-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $allowed[$type];

@@ -7,7 +7,7 @@ $stmt->execute([$id]);
 $product = $stmt->fetch();
 if (!$product) {
     http_response_code(404);
-    exit('Khong tim thay san pham.');
+    exit('Không tìm thấy sản phẩm.');
 }
 
 $rating = product_rating((int) $product['id']);
@@ -24,6 +24,7 @@ if (current_user()) {
 
 render_header($product['name'], 'products');
 ?>
+<a class="btn btn-outline-dark mb-3" href="<?= url('products.php') ?>"><i class="bi bi-arrow-left me-1"></i>Quay lại danh sách xe</a>
 <div class="row g-4">
     <div class="col-lg-6">
         <div class="bb-card p-4 text-center">
@@ -36,11 +37,11 @@ render_header($product['name'], 'products');
             <h1 class="page-title h2 mb-2"><?= e($product['name']) ?></h1>
             <div class="mb-3">
                 <span class="rating-stars"><i class="bi bi-star-fill"></i></span>
-                <span class="text-muted"><?= $rating['total'] ? e((string) $rating['average']) . '/5 tu ' . (int) $rating['total'] . ' danh gia' : 'Chua co danh gia' ?></span>
+                <span class="text-muted"><?= $rating['total'] ? e((string) $rating['average']) . '/5 từ ' . (int) $rating['total'] . ' đánh giá' : 'Chưa có đánh giá' ?></span>
             </div>
             <div class="h3 fw-bold text-success mb-3"><?= money((int) $product['price']) ?></div>
             <p class="text-muted"><?= e($product['description']) ?></p>
-            <div class="mb-4"><span class="badge badge-soft">Con <?= (int) $product['stock'] ?> xe</span></div>
+            <div class="mb-4"><span class="badge badge-soft">Còn <?= (int) $product['stock'] ?> xe</span></div>
             <div class="d-flex flex-wrap gap-2">
                 <?php if (current_user()): ?>
                     <form method="post" action="<?= url('cart_actions.php') ?>">
@@ -48,17 +49,17 @@ render_header($product['name'], 'products');
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
                         <input type="hidden" name="back" value="product.php?id=<?= (int) $product['id'] ?>">
-                        <button class="btn btn-brand"><i class="bi bi-bag-plus me-1"></i>Them vao gio</button>
+                        <button class="btn btn-brand"><i class="bi bi-cart-plus-fill me-1"></i>Thêm vào giỏ</button>
                     </form>
                     <form method="post" action="<?= url('wishlist_actions.php') ?>">
                         <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="action" value="toggle">
                         <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
                         <input type="hidden" name="back" value="product.php?id=<?= (int) $product['id'] ?>">
-                        <button class="btn btn-outline-dark"><i class="bi <?= is_wishlisted((int) $product['id']) ? 'bi-heart-fill text-danger' : 'bi-heart' ?> me-1"></i>Yeu thich</button>
+                        <button class="btn btn-outline-dark"><i class="bi <?= is_wishlisted((int) $product['id']) ? 'bi-heart-fill text-danger' : 'bi-heart' ?> me-1"></i>Yêu thích</button>
                     </form>
                 <?php else: ?>
-                    <a class="btn btn-brand" href="<?= url('auth/login.php') ?>">Dang nhap de them vao gio</a>
+                    <a class="btn btn-brand" href="<?= url('auth/login.php') ?>">Đăng nhập để thêm vào giỏ</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -68,13 +69,13 @@ render_header($product['name'], 'products');
 <div class="row g-4 mt-1">
     <div class="col-lg-5">
         <div class="bb-card p-4">
-            <h2 class="h5 fw-bold mb-3">Danh gia san pham</h2>
+            <h2 class="h5 fw-bold mb-3">Đánh giá sản phẩm</h2>
             <?php if (current_user()): ?>
                 <form method="post" action="<?= url('review_actions.php') ?>">
                     <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                     <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
                     <div class="mb-3">
-                        <label class="form-label">So sao</label>
+                        <label class="form-label">Số sao</label>
                         <select class="form-select" name="rating">
                             <?php for ($i = 5; $i >= 1; $i--): ?>
                                 <option value="<?= $i ?>" <?= (int) ($userReview['rating'] ?? 5) === $i ? 'selected' : '' ?>><?= $i ?> sao</option>
@@ -82,21 +83,21 @@ render_header($product['name'], 'products');
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nhan xet</label>
+                        <label class="form-label">Nhận xét</label>
                         <textarea class="form-control" name="comment" rows="4" required><?= e($userReview['comment'] ?? '') ?></textarea>
                     </div>
-                    <button class="btn btn-brand">Gui danh gia</button>
+                    <button class="btn btn-brand">Gửi đánh giá</button>
                 </form>
             <?php else: ?>
-                <div class="text-muted">Dang nhap de viet danh gia cho san pham nay.</div>
+                <div class="text-muted">Đăng nhập để viết đánh giá cho sản phẩm này.</div>
             <?php endif; ?>
         </div>
     </div>
     <div class="col-lg-7">
         <div class="bb-card p-4">
-            <h2 class="h5 fw-bold mb-3">Nhan xet khach hang</h2>
+            <h2 class="h5 fw-bold mb-3">Nhận xét khách hàng</h2>
             <?php if (!$reviews): ?>
-                <div class="text-muted">Chua co nhan xet nao.</div>
+                <div class="text-muted">Chưa có nhận xét nào.</div>
             <?php endif; ?>
             <?php foreach ($reviews as $review): ?>
                 <div class="review-item">
