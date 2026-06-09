@@ -16,6 +16,26 @@ BikeBuzz la web ban xe dap viet bang PHP thuan va Bootstrap. Du an co san:
 
 Can PHP co extension `pdo_sqlite`.
 
+Tren may hien tai da co PHP tai `D:\php\php.exe`, nhung chua them vao PATH. Chay nhanh bang script:
+
+```bash
+start-bikebuzz.bat
+```
+
+Hoac PowerShell:
+
+```powershell
+.\start-bikebuzz.ps1
+```
+
+Neu muon go lenh truc tiep:
+
+```powershell
+D:\php\php.exe -d extension_dir=D:\php\ext -d extension=pdo_sqlite -d extension=sqlite3 -S localhost:8000
+```
+
+Neu may da them PHP vao PATH va da bat SQLite, co the dung:
+
 ```bash
 php -S localhost:8000
 ```
